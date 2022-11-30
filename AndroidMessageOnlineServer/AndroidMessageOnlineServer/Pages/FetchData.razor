@@ -1,0 +1,47 @@
+﻿@page "/"
+@using AndroidMessageOnlineServer.Data
+@inject SMSMessageService SMSService
+
+<PageTitle>SMS Messages</PageTitle>
+
+<h1>SMS Messages</h1>
+
+<p>Load messages from server database.</p>
+
+@if (SMSMessages == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>ID</th>
+                <th>Sender</th>
+                <th>Content</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in SMSMessages)
+            {
+                <tr>
+                    <td>@forecast.SendDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@forecast.ID</td>
+                    <td>@forecast.Sender</td>
+                    <td>@forecast.Content</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private SMSMessage[]? SMSMessages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        SMSMessages = await SMSService.GetSMSMessages();
+    }
+}
